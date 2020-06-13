@@ -4,12 +4,13 @@ varying vec2 fragTexCoord;
 varying vec3 fragNormal;
 
 uniform sampler2D sampler;
+uniform vec2 mousePos;
 
 void main() 
 {
     vec3 ambientColor = vec3(0.15, 0.15, 0.1);
     vec3 sunColor = vec3(1, 1, .98);
-    vec3 sunDir = normalize(vec3(1.0, 4.0, 0.0));
+    vec3 sunDir = normalize(vec3(mousePos, 0.0));
 
     vec4 texel = texture2D(sampler, fragTexCoord);
 

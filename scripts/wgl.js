@@ -175,18 +175,22 @@ var webgl_init = function(context, vs, fs) {
     var matWorldUniformLocation = gl.getUniformLocation(program, 'mWorld');
     var matViewUniformLocation = gl.getUniformLocation(program, 'mView');
     var matProjUniformLocation = gl.getUniformLocation(program, 'mProj');
+    var mousePosUniformLocation = gl.getUniformLocation(program, 'mousePos');
 
     var worldMatrix = new Float32Array(16);
     var viewMatrix = new Float32Array(16);
     var projMatrix = new Float32Array(16);
+    var mouseCoord = new Float32Array(2);
     glMatrix.mat4.identity(worldMatrix);
     glMatrix.mat4.lookAt(viewMatrix, [0, 0, -500], [0, 0, 0], [0, 1, 0]);
     glMatrix.mat4.perspective(projMatrix, toRadians(45), 8/6, 0.1, 1000.0);
 
+    mouseCoord = [0,0];
+
     gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
     gl.uniformMatrix4fv(matViewUniformLocation, gl.FALSE, viewMatrix);
     gl.uniformMatrix4fv(matProjUniformLocation, gl.FALSE, projMatrix);
-
+    
     var xRotationMatrix = new Float32Array(16)
     var yRotationMatrix = new Float32Array(16);
     
@@ -203,6 +207,9 @@ var webgl_init = function(context, vs, fs) {
         glMatrix.mat4.mul(worldMatrix, xRotationMatrix, yRotationMatrix);
 
         gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix)
+
+        mouseCoord = [-mouseCoordinates.x/400 + 1, -mouseCoordinates.y/300 + 1];
+        gl.uniform2fv(mousePosUniformLocation, mouseCoord);
 
         gl.clearColor(.7, .7, 1, 1.0)
         gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);

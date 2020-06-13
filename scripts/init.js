@@ -1,9 +1,11 @@
 var monkey;
 var monkeytex;
+var mouseCoordinates = {x:0,y:0};
+var canvas
 var init = function() {
     console.log("loaded");
 
-    var canvas = document.getElementById('wgl');
+    canvas = document.getElementById('wgl');
 
     monkeytex = document.getElementById("monkeytex");
     
@@ -45,4 +47,13 @@ function XHR_get(url) {
     XHR.open('GET', url);
     XHR.send();
     return XHR;
+}
+
+function captureMouse(evt) {
+    var rect = canvas.getBoundingClientRect();
+    mouseCoordinates =
+    {
+      x: evt.clientX - rect.left,
+      y: evt.clientY - rect.top
+    };
 }

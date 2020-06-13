@@ -8,7 +8,7 @@
         <script src="scripts/wgl.js" async defer></script>
     </head>
     <body onload="init()">
-        <canvas id="wgl" width="800" height="600" style="width: 100%;">
+        <canvas onmousemove="captureMouse(event)" id="wgl" width="800" height="600" style="width: 100%;">
             HTML Canvas Support is Required
         </canvas>
         <img src="resources/textures/monkey.png" style="width:0; height:0; opacity: 0;" id="monkeytex">

@@ -1,9 +1,11 @@
 var monkey;
-
+var monkeytex;
 var init = function() {
     console.log("loaded");
 
     var canvas = document.getElementById('wgl');
+
+    monkeytex = document.getElementById("monkeytex");
     
     var gl = canvas.getContext('webgl');
 

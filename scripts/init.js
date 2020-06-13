@@ -1,3 +1,5 @@
+var monkey;
+
 var init = function() {
     console.log("loaded");
 
@@ -8,26 +10,37 @@ var init = function() {
     if (!gl) {
         gl = canvas.getContext('experimental-webgl');
     }
-    
-    //Load Shaders
-    var vert_shader, frag_shader;
 
-    var vertLoader = new XMLHttpRequest();
-    vertLoader.open('GET', 'resources/shaders/vert.glsl');
-    vertLoader.onreadystatechange = function() {vert_shader = vertLoader.responseText;}
-    vertLoader.send();
+    var vertLoader = XHR_get('resources/shaders/vert.glsl')
+    var fragLoader = XHR_get('resources/shaders/frag.glsl')
+    var monkeyLoader = XHR_get('resources/models/monkey.json')
 
-    var fragLoader = new XMLHttpRequest();
-    fragLoader.open('GET', 'resources/shaders/frag.glsl');
-    fragLoader.onreadystatechange = function() {frag_shader = fragLoader.responseText;}
-    fragLoader.send();
+    var waitForLoad = function(){
+        if (XHR_Completed([vertLoader, fragLoader, monkeyLoader])) {
+            monkey = JSON.parse(monkeyLoader.response)
+            webgl_init(gl, vertLoader.response, fragLoader.response);
+        } else 
+            setTimeout(waitForLoad, 200); //check again in a little while
+    }
+    waitForLoad();
+}
 
-    var loadChecker = window.setInterval(function(){
-        if (vertLoader.readyState == 4 && vertLoader.status == 200 
-            && fragLoader.readyState == 4 && fragLoader.status == 200) 
-            {
-                clearInterval(loadChecker);
-                webgl_init(gl, vert_shader, frag_shader);
-            };
-    }, 500);
+function XHR_Completed(XHR) {
+    if (XHR instanceof XMLHttpRequest){
+        return (XHR.readyState == 4 && XHR.status == 200);
+    } else if (Array.isArray(XHR)) {
+        for (let i = 0; i < XHR.length; i++) {
+            if ((XHR[i] instanceof XMLHttpRequest) == false) return false;
+            if (XHR[i].readyState != 4 || XHR[i].status != 200) return false;
+        }
+        return true;
+    }
+    return false;
+}
+
+function XHR_get(url) {
+    var XHR = new XMLHttpRequest();
+    XHR.open('GET', url);
+    XHR.send();
+    return XHR;
 }

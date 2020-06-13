@@ -89,6 +89,8 @@ var webgl_init = function(context, vs, fs) {
     // ];
 
     var texCoords = monkey.meshes[0].texturecoords[0];
+
+    var monkeyNormals = monkey.meshes[0].normals;
     
 
     var vertexBuffer = gl.createBuffer();
@@ -98,6 +100,10 @@ var webgl_init = function(context, vs, fs) {
     var texBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, texBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texCoords), gl.STATIC_DRAW);
+
+    var normalsBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, normalsBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(monkeyNormals), gl.STATIC_DRAW);
 
     var indexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
@@ -130,8 +136,19 @@ var webgl_init = function(context, vs, fs) {
     
     gl.enableVertexAttribArray(uvAttribLocation);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
+    gl.bindBuffer(gl.ARRAY_BUFFER, normalsBuffer);
+    var normalAttribLocation = gl.getAttribLocation(program, 'normalsVect');
+    gl.vertexAttribPointer(
+        normalAttribLocation,
+        3,
+        gl.FLOAT,
+        gl.TRUE,
+        3 * Float32Array.BYTES_PER_ELEMENT,
+        0
+    );
+    
+    gl.enableVertexAttribArray(normalAttribLocation);
 
     //texture setup
     var textureBuffer = gl.createTexture();

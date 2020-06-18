@@ -211,7 +211,7 @@ var webgl_init = function(context, vs, fs) {
         mouseCoord = [-mouseCoordinates.x/400 + 1, -mouseCoordinates.y/300 + 1];
         gl.uniform2fv(mousePosUniformLocation, mouseCoord);
 
-        gl.clearColor(.7, .7, 1, 1.0)
+        gl.clearColor(.1, .1, .1, 1.0)
         gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
 
         gl.bindTexture(gl.TEXTURE_2D, textureBuffer);
